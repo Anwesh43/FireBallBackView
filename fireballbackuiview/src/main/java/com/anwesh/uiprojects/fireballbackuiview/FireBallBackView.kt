@@ -22,9 +22,36 @@ val squareColor : Int = Color.parseColor("#3F51B5")
 val ballColor : Int = Color.parseColor("#673AB7")
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
+val rFactor : Float = 4.8f
 
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.sin(this * Math.PI).toFloat()
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawFireBallBack(scale : Float, size : Float, w : Float, paint : Paint) {
+    val sf : Float = scale.sinify()
+    val sf1 : Float = sf.divideScale(0, 2)
+    val sf2 : Float = sf.divideScale(1, 2)
+    val r : Float = size / rFactor
+    paint.style = Paint.Style.FILL
+    paint.color = squareColor
+    drawRect(RectF(-size, -size + size * sf1, size, size - size * sf1), paint)
+    paint.style = Paint.Style.STROKE
+    drawRect(RectF(-size, -size, size, size), paint)
+    drawCircle(size + (w - 2 * size) * sf2, 0f, r, paint)
+}
+
+fun Canvas.drawFBBNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(0f, gap * (i + 1))
+    drawFireBallBack(scale, size, w, paint)
+    restore()
+}
