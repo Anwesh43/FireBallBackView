@@ -210,4 +210,13 @@ class FireBallBackView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : FireBallBackView {
+            val view : FireBallBackView = FireBallBackView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
