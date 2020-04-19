@@ -118,4 +118,46 @@ class FireBallBackView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class FBBNode(var i : Int, val state : State = State()) {
+
+        private var next : FBBNode? = null
+        private var prev : FBBNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = FBBNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawFBBNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Float) -> Unit) {
+            state.update(cb)
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : FBBNode {
+            var curr : FBBNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+    }
 }
