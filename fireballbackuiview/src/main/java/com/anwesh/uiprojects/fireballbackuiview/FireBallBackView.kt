@@ -14,7 +14,6 @@ import android.graphics.Color
 import android.graphics.RectF
 
 val nodes : Int = 5
-val lines : Int = 4
 val strokeFactor : Float = 2.9f
 val sizeFactor : Float = 0.02f
 val scGap : Float = 0.02f
@@ -40,6 +39,8 @@ fun Canvas.drawFireBallBack(scale : Float, size : Float, w : Float, paint : Pain
     drawRect(RectF(-size, -size + size * sf1, size, size - size * sf1), paint)
     paint.style = Paint.Style.STROKE
     drawRect(RectF(-size, -size, size, size), paint)
+    paint.style = Paint.Style.FILL
+    paint.color = ballColor
     drawCircle(size + (w - 2 * size) * sf2, 0f, r, paint)
 }
 
