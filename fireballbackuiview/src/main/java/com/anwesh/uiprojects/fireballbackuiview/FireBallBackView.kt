@@ -184,4 +184,26 @@ class FireBallBackView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : FireBallBackView) {
+
+        private val animator : Animator = Animator(view)
+        private val fbb : FireBallBack = FireBallBack(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            fbb.draw(canvas, paint)
+            animator.animate {
+                fbb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            fbb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
