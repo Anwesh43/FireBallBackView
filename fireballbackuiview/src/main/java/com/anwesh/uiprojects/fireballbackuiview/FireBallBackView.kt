@@ -16,10 +16,11 @@ import android.graphics.RectF
 val nodes : Int = 5
 val strokeFactor : Float = 90f
 val sizeFactor : Float = 2.9f
-val scGap : Float = 0.02f
+val parts : Int = 3
+val scGap : Float = 0.02f / parts
 val squareColor : Int = Color.parseColor("#3F51B5")
 val ballColor : Int = Color.parseColor("#673AB7")
-val delay : Long = 20
+val delay : Long = 10
 val backColor : Int = Color.parseColor("#BDBDBD")
 val rFactor : Float = 4.8f
 
@@ -31,14 +32,20 @@ fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
 fun Canvas.drawFireBallBack(scale : Float, size : Float, w : Float, paint : Paint) {
     val sf : Float = scale.sinify()
-    val sf1 : Float = sf.divideScale(0, 2)
-    val sf2 : Float = sf.divideScale(1, 2)
+    val sf2 : Float = sf.divideScale(1, parts)
     val r : Float = size / rFactor
-    paint.style = Paint.Style.FILL
-    paint.color = squareColor
-    drawRect(RectF(0f, -size + size * sf1, 2 * size, size - size * sf1), paint)
-    paint.style = Paint.Style.STROKE
-    drawRect(RectF(0f, -size, 2 * size, size), paint)
+    for (j in 0..1) {
+        val sfi : Float = sf.divideScale(j * 2, parts)
+        paint.color = squareColor
+        save()
+        translate((w - 2 * size) * j, 0f)
+        paint.style = Paint.Style.FILL
+        val y : Float = size * sfi * j + size * (1 - sfi) * (1 - j)
+        drawRect(RectF(0f, -y, 2 * size, y), paint)
+        paint.style = Paint.Style.STROKE
+        drawRect(RectF(0f, -size, 2 * size, size), paint)
+        restore()
+    }
     paint.style = Paint.Style.FILL
     paint.color = ballColor
     drawCircle(size + (w - 2 * size) * sf2, 0f, r, paint)
